@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Coats';
+    src: url('../Fonts/Coats\ Bold.otf');
+}
+
+.coats-font {
+    font-family: 'Coats', sans-serif;
+}
+
+.coats-font::placeholder {
+    font-family: 'Coats', sans-serif;
+}
+
+.back-color{
+    background-color: #cabf85;
+}
+
+.my-gray-color{
+    color: #2e2e2e;
+}
