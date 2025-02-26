@@ -34,7 +34,7 @@ const SignInPage = () => {
 
             console.log("FormData:", formData);
 
-            const response = await fetch('https://localhost:7186/check', {
+            const response = await fetch('https://localhost:7186/Auth/login', {
                 method: 'POST',
                 body: formData
             });
