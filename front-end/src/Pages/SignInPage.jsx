@@ -32,8 +32,6 @@ const SignInPage = () => {
             formData.append('username', username);
             formData.append('hash', hashedPassword);
 
-            console.log("FormData:", formData);
-
             const response = await fetch('https://localhost:7186/Auth/login', {
                 method: 'POST',
                 body: formData

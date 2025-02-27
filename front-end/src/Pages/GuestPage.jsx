@@ -13,6 +13,6 @@ const GuestPage = () => {
             </div>
         </div>
     );
-  }
+}
   
 export default GuestPage;

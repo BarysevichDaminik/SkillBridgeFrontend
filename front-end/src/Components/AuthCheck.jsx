@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAccessTokenFromCookies } from './utils/cookieUtils';
 
 const AuthCheck = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -8,7 +7,7 @@ const AuthCheck = () => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const accessToken = getAccessTokenFromCookies();
+            const accessToken = getTokenFromCookies();
             if (!accessToken) {
                 navigate('/signin');
                 setIsLoading(false);
@@ -16,14 +15,11 @@ const AuthCheck = () => {
             }
 
             try {
-                const response = await fetch('https://localhost:7168/Auth/authWithToken',{
-                    method: 'POST'
-                });
+                const response = await fetch('https://localhost:7186/Auth/authWithToken',{ method: 'POST' });
 
                 if (response.ok) {
-                    navigate('/main');
-                } else {
-                    navigate('/guest');
+                    console.log("ok");
+                    navigate('/main'); 
                 }
             } catch (error) {
                 navigate('/guest');
@@ -37,5 +33,27 @@ const AuthCheck = () => {
 
     return isLoading ? <div>Loading...</div> : null;
 };
+
+const getTokenFromCookies = () => {
+    const cookies = document.cookie;
+    if (!cookies) {
+        return { jwtToken: null, refreshToken: null };
+    }
+
+    let jwtToken = null;
+    let refreshToken = null;
+    const cookieArray = cookies.split(';');
+
+    for (let i = 0; i < cookieArray.length; i++) {
+        let cookie = cookieArray[i].trim();
+        if (cookie.startsWith('jwtToken=')) {
+            jwtToken = cookie.substring('jwtToken='.length);
+        } else if (cookie.startsWith('refreshToken=')) {
+            refreshToken = cookie.substring('refreshToken='.length);
+        }
+    }
+
+    return { jwtToken: jwtToken, refreshToken: refreshToken };
+}
 
 export default AuthCheck;

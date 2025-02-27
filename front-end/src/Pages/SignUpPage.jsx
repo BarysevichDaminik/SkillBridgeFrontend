@@ -30,7 +30,7 @@ const SignUpPage = () => {
         event.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await fetch('https://localhost:7186/addUser', {
+            const response = await fetch('https://localhost:7186/Auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'},
