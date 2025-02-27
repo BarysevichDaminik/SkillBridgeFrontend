@@ -38,7 +38,8 @@ const SignUpPage = () => {
                     Username : username,
                     Email : email,
                     Password : password
-                })
+                }),
+                credentials: 'include'
             });
 
             if (response.status === 200) {

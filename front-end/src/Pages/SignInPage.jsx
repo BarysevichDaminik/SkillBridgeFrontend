@@ -34,7 +34,8 @@ const SignInPage = () => {
 
             const response = await fetch('https://localhost:7186/Auth/login', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'include'
             });
 
             if (response.status === 200) {
