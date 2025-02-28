@@ -16,16 +16,10 @@ const AuthCheck = () => {
 
             try {
                 const response = await fetch('https://localhost:7186/Auth/authWithToken',{ method: 'POST', credentials: 'include' });
-
-                if (response.ok) {
-                    console.log("ok");
-                    navigate('/main'); 
-                }
-            } catch (error) {
-                navigate('/guest');
-            } finally {
-                setIsLoading(false);
-            }
+                if (response.ok) { console.log("ok"); navigate('/main'); }
+            } 
+            catch (error) {} 
+            finally { setIsLoading(false); }
         };
 
         checkAuth();
