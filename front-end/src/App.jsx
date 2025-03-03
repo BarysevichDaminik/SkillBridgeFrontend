@@ -4,19 +4,18 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import SignInPage from './Pages/SignInPage.jsx';
 import SignUpPage from './Pages/SignUpPage.jsx';
 import MainPage from './Pages/MainPage.jsx';
-import AuthCheck from './Components/AuthCheck.jsx';
+import ProtectedRoute from './Components/ProtectedRoute.jsx';
 
 function App() {
     return (
         <Router>
-            <AuthCheck />
             <Routes>
-                <Route path="/guest" element={<GuestPage />} />
-                <Route path="/signin" element={<SignInPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/main" element={<MainPage />} />
-                <Route path="/" element={<Navigate to="/guest" replace={true} />} />
-                <Route path="/*" element={<Navigate to="/guest" replace={true} />} />
+                <Route path="/guest" element={<ProtectedRoute component={GuestPage} />} />
+                <Route path="/signin" element={<ProtectedRoute component={SignInPage} />} />
+                <Route path="/signup" element={<ProtectedRoute component={SignUpPage} />} />
+                <Route path="/main" element={<ProtectedRoute component={MainPage} />} />
+                <Route path="/" element={<ProtectedRoute component={() => <Navigate to="/guest" replace={true} />} />} />
+                <Route path="/*" element={<ProtectedRoute component={() => <Navigate to="/guest" replace={true} />} />} />
             </Routes>
         </Router>
     );

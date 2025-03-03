@@ -1,31 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+const checkAuth = async () => {
+    const accessToken = getTokenFromCookies();
+    if (!accessToken) { return false; }
 
-const AuthCheck = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            const accessToken = getTokenFromCookies();
-            if (!accessToken) {
-                navigate('/signin');
-                setIsLoading(false);
-                return;
-            }
-
-            try {
-                const response = await fetch('https://localhost:7186/Auth/authWithToken',{ method: 'POST', credentials: 'include' });
-                if (response.ok) { console.log("ok"); navigate('/main'); }
-            } 
-            catch (error) {} 
-            finally { setIsLoading(false); }
-        };
-
-        checkAuth();
-    }, [navigate]);
-
-    return isLoading ? <div>Loading...</div> : null;
+    try {
+        const response = await fetch('https://localhost:7186/Auth/authWithToken', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        if (response.status === 200) { return true; } 
+        else { return false; }
+    } 
+    catch (error) { return false; }
 };
 
 const getTokenFromCookies = () => {
@@ -50,4 +35,4 @@ const getTokenFromCookies = () => {
     return { jwtToken: jwtToken, refreshToken: refreshToken };
 }
 
-export default AuthCheck;
+export default checkAuth;

@@ -19,6 +19,15 @@
     color: #2e2e2e;
 }
 
+.my-gray-bg-st{
+    background: rgba(46,46,46, 0.5);
+}
+
+
 .main-page-bgc{
     background-color: #ffffea;
+}
+
+.avatar-size {
+    max-width: 80px;
 }

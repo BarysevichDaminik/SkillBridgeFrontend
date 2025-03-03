@@ -1,6 +1,6 @@
 function Profile() {
     return (
-        <div>
+        <div className="bg-light rounded-pill">
             
         </div>
     );
