@@ -13,6 +13,8 @@ function MainPage() {
         setSelectedMenuItem(menuItem);
     };
 
+    const avatar = require(`../Assets/Avatars/avatar${localStorage.getItem('avatarNumber')}.png`);
+
     let content;
     switch (selectedMenuItem) {
         case 'profile':
@@ -22,7 +24,7 @@ function MainPage() {
             content = <ExchangesContent />;
             break;
         case 'chats':
-            content = <ChatContent />;
+            content = <ChatContent chatName={'Chat 1'} mySkill={'programming'} opponentSkill={'gitare'}/>;
             break;
         case 'subscription':
             content = <SubscriptionContent />;
@@ -32,30 +34,29 @@ function MainPage() {
             break;
         default: break;
     }
-    const avatar = require(`../Assets/Avatars/avatar${localStorage.getItem('avatarNumber')}.png`);
     return (
         <div className="content-area main-page-bgc min-vh-100">
             <nav className="navbar-collapse pt-4 fs-3">
                 <ul className="navbar-nav d-flex flex-row justify-content-around list-unstyled coats-font">
-                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'skills' ? 'shadow' : ''}`} onClick={() => handleMenuItemClick('skills')}>
+                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'skills' ? 'shadow bg-light' : ''}`} onClick={() => handleMenuItemClick('skills')}>
                         Скилы
                     </li>
-                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'subscription' ? 'shadow' : ''}`} onClick={() => handleMenuItemClick('subscription')}>
+                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'subscription' ? 'shadow bg-light' : ''}`} onClick={() => handleMenuItemClick('subscription')}>
                         Подписка
                     </li>
-                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'chats' ? 'shadow' : ''}`} onClick={() => handleMenuItemClick('chats')}>
+                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'chats' ? 'shadow bg-light' : ''}`} onClick={() => handleMenuItemClick('chats')}>
                         Мои чаты
                     </li>
-                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'exchanges' ? 'shadow' : ''}`} onClick={() => handleMenuItemClick('exchanges')}>
+                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'exchanges' ? 'shadow bg-light' : ''}`} onClick={() => handleMenuItemClick('exchanges')}>
                         Мои обмены
                     </li>
-                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'profile' ? 'shadow' : ''}`} onClick={() => handleMenuItemClick('profile')}>
+                    <li role="button" className={`rounded-pill p-2 ps-4 pe-4 nav-item align-self-center ${selectedMenuItem === 'profile' ? 'shadow bg-light' : ''}`} onClick={() => handleMenuItemClick('profile')}>
                         Профиль
                         <img className="ps-4 avatar-size" src={avatar} alt="avatar" />
                     </li>
                 </ul>
             </nav>
-            <div className='d-flex h-100 bg-white m-3 rounded-pill shadow'>
+            <div className='d-flex h-100 bg-white m-3 rounded-3 shadow'>
                 {content}
             </div>
         </div>
