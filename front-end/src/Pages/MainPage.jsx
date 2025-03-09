@@ -24,7 +24,7 @@ function MainPage() {
             content = <ExchangesContent />;
             break;
         case 'chats':
-            content = <ChatContent chatName={'Chat 1'} mySkill={'programming'} opponentSkill={'gitare'}/>;
+            content = <ChatContent />;
             break;
         case 'subscription':
             content = <SubscriptionContent />;
