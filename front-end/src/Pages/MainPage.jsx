@@ -56,7 +56,7 @@ function MainPage() {
                     </li>
                 </ul>
             </nav>
-            <div className='d-flex h-100 bg-white m-3 rounded-3 shadow'>
+            <div className='d-flex h-100  m-3 rounded-3'>
                 {content}
             </div>
         </div>
