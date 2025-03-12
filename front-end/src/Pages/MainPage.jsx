@@ -2,7 +2,7 @@ import ProfileSettings from '../Components/Profile.jsx';
 import ExchangesContent from '../Components/Exchanges.jsx';
 import SubscriptionContent from '../Components/Subscription.jsx';
 import SkillsContent from '../Components/Skills.jsx';
-import ChatContent from '../Components/Chat.jsx';
+import ChatContent from '../Components/ChatContent.jsx';
 import '../Styles/index.css';
 import { useState } from 'react';
 
