@@ -32,7 +32,7 @@ const SignUpPage = () => {
         event.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await fetch('https://localhost:7186/Auth/register', {
+            const response = await fetch('https://192.168.166.233:7186/Auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ const SignUpPage = () => {
             });
 
             if (response.status === 200) {
-                const response = await fetch('https://localhost:7186/MainPage/getAvatar', {
+                const response = await fetch('https://192.168.166.233:7186/MainPage/getAvatar', {
                     method: 'GET',
                     credentials: 'include'
                 });

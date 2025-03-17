@@ -3,7 +3,7 @@ const checkAuth = async () => {
     if (!accessToken) { return false; }
 
     try {
-        const response = await fetch('https://localhost:7186/Auth/authWithToken', {
+        const response = await fetch('https://192.168.166.233:7186/Auth/authWithToken', {
             method: 'POST',
             credentials: 'include'
         });

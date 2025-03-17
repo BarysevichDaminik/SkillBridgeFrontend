@@ -6,7 +6,7 @@ export default function SignalRConnection({ onMessageReceived, onConnectionReady
 
     useEffect(() => {
         connection.current = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:7215/myhub")
+            .withUrl("https://192.168.166.233:7215/myhub")
             .withAutomaticReconnect()
             .build();
 

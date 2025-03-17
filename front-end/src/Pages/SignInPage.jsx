@@ -41,14 +41,14 @@ const SignInPage = () => {
             formData.append('username', username);
             formData.append('hash', hashedPassword);
 
-            const response = await fetch('https://localhost:7186/Auth/login', {
+            const response = await fetch('https://192.168.166.233:7186/Auth/login', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
             });
 
             if (response.status === 200) {
-                const response = await fetch('https://localhost:7186/MainPage/getAvatar', {
+                const response = await fetch('https://192.168.166.233:7186/MainPage/getAvatar', {
                     method: 'GET',
                     credentials: 'include'
                 });

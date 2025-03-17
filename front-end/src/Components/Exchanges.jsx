@@ -36,7 +36,7 @@ export default function ExchangesContent() {
 }
 
 const fQuery = async () => {
-    return await fetch('https://localhost:7186/MainPage/getExchangesInfo', {
+    return await fetch('https://192.168.166.233:7186/MainPage/getExchangesInfo', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
