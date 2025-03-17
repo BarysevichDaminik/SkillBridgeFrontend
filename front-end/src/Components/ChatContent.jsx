@@ -8,7 +8,8 @@ export default function ChatContent() {
     const avatar = require(`../Assets/Avatars/avatar${localStorage.getItem("avatarNumber")}.png`);
 
     const fetchChats = async () => {
-        return await fetch("https://192.168.166.233:7186/MainPage/getChatsInfo", {
+        const host = window.location.hostname;
+        return await fetch(`https://${host}:7186/MainPage/getChatsInfo`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

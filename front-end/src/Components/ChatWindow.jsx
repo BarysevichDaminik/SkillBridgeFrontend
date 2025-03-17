@@ -8,8 +8,9 @@ export default function ChatWindow({ chat, onBack }) {
     useEffect(() => {
         const connectSignalR = async () => {
             const signalR = await import("@microsoft/signalr");
+            const host = window.location.hostname;
             connectionRef.current = new signalR.HubConnectionBuilder()
-                .withUrl("https://192.168.166.233:7215/myhub")
+                .withUrl(`https://${host}:7215/myhub`)
                 .withAutomaticReconnect()
                 .build();
 

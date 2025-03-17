@@ -5,8 +5,9 @@ export default function SignalRConnection({ onMessageReceived, onConnectionReady
     const connection = useRef(null);
 
     useEffect(() => {
+        const host = window.location.hostname;
         connection.current = new signalR.HubConnectionBuilder()
-            .withUrl("https://192.168.166.233:7215/myhub")
+            .withUrl(`https://${host}:7215/myhub`)
             .withAutomaticReconnect()
             .build();
 
