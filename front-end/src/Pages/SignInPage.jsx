@@ -46,6 +46,7 @@ const SignInPage = () => {
                 body: formData,
                 credentials: 'include'
             });
+            localStorage.setItem('username', username);
 
             if (response.status === 200) {
                 const response = await fetch(`https://${host}:7186/MainPage/getAvatar`, {

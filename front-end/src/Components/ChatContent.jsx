@@ -40,7 +40,6 @@ export default function ChatContent() {
             ) : (
                 chats.map((chat) => (
                     <ChatCard
-                        key={chat.id}
                         chat={chat}
                         avatar={avatar}
                         onSelect={() => setSelectedChat(chat)}

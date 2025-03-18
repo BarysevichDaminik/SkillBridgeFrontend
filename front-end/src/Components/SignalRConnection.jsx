@@ -16,7 +16,7 @@ export default function SignalRConnection({ onMessageReceived, onConnectionReady
             .then(() => {
                 console.log("SignalR подключение установлено");
                 if (onConnectionReady) {
-                    onConnectionReady(connection.current); // Передаём экземпляр подключения в родительский компонент
+                    onConnectionReady(connection.current);
                 }
             })
             .catch((err) => console.error("Ошибка подключения SignalR:", err));
@@ -30,7 +30,7 @@ export default function SignalRConnection({ onMessageReceived, onConnectionReady
         return () => {
             connection.current.stop().then(() => console.log("SignalR подключение закрыто"));
         };
-    }, [onMessageReceived, onConnectionReady]); // useEffect зависит только от переданных функций
+    }, [onMessageReceived, onConnectionReady]);
 
-    return null; // Этот компонент ничего не рендерит
+    return null;
 }

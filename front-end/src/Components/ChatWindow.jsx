@@ -38,11 +38,7 @@ export default function ChatWindow({ chat, onBack }) {
     const handleSendMessage = () => {
         if (message.trim() !== "" && connectionRef.current) {
             connectionRef.current
-                .invoke("SendMessage", message)
-                .then(() => {
-                    setMessages((prevMessages) => [...prevMessages, { message }]);
-                    setMessage("");
-                })
+                .invoke("SendMessage", chat.chatName, localStorage.getItem('username'), message)
                 .catch((error) => console.error("Ошибка отправки сообщения:", error));
         }
     };
