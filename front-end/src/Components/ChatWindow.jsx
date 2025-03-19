@@ -6,9 +6,27 @@ export default function ChatWindow({ chat, onBack }) {
     const connectionRef = useRef(null);
 
     useEffect(() => {
+        const host = window.location.hostname;
+
+        const loadMessages = async () => {
+            try {
+                const response = await fetch(`https://${host}:7186/MainPage/msgs?chatName=${chat.chatName}`, {
+                    credentials: 'include'
+                });
+                if (!response.ok) {
+                    throw new Error(`Ошибка загрузки сообщений: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setMessages(data);
+            } catch (error) {
+                console.error("Ошибка загрузки сообщений:", error);
+            }
+        };
+
+        loadMessages();
+
         const connectSignalR = async () => {
             const signalR = await import("@microsoft/signalr");
-            const host = window.location.hostname;
             connectionRef.current = new signalR.HubConnectionBuilder()
                 .withUrl(`https://${host}:7215/myhub`)
                 .withAutomaticReconnect()
@@ -33,13 +51,14 @@ export default function ChatWindow({ chat, onBack }) {
                 connectionRef.current.stop().then(() => console.log("SignalR подключение закрыто"));
             }
         };
-    }, []);
+    }, [chat.chatName]);
 
     const handleSendMessage = () => {
         if (message.trim() !== "" && connectionRef.current) {
             connectionRef.current
-                .invoke("SendMessage", chat.chatName, localStorage.getItem('username'), message)
+                .invoke("SendMessage", chat.chatName, localStorage.getItem("username"), message)
                 .catch((error) => console.error("Ошибка отправки сообщения:", error));
+            setMessage("");
         }
     };
 

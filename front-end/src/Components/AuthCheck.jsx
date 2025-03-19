@@ -8,7 +8,11 @@ const checkAuth = async () => {
             method: 'POST',
             credentials: 'include'
         });
-        if (response.status === 200) { return true; }
+        if (response.status === 200) { 
+            const username = await response.text();
+            localStorage.setItem('username', username);
+            return true; 
+        }
         else { return false; }
     }
     catch (error) { return false; }
