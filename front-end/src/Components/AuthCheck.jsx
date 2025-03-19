@@ -1,21 +1,25 @@
 const checkAuth = async () => {
     const accessToken = getTokenFromCookies();
     if (!accessToken) { return false; }
-
     try {
         const host = window.location.hostname;
         const response = await fetch(`https://${host}:7186/Auth/authWithToken`, {
             method: 'POST',
             credentials: 'include'
         });
-        if (response.status === 200) { 
-            const username = await response.text();
-            localStorage.setItem('username', username);
-            return true; 
+
+        if (response.status === 200) {
+            const data = await response.json();
+            localStorage.setItem('id', data.id);
+            localStorage.setItem('username', data.name);
+            return true;
+        } else {
+            return false;
         }
-        else { return false; }
+    } 
+    catch (error) {
+        return false;
     }
-    catch (error) { return false; }
 };
 
 const getTokenFromCookies = () => {

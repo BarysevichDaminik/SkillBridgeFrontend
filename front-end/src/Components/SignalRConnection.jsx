@@ -14,12 +14,11 @@ export default function SignalRConnection({ onMessageReceived, onConnectionReady
         connection.current
             .start()
             .then(() => {
-                console.log("SignalR подключение установлено");
                 if (onConnectionReady) {
                     onConnectionReady(connection.current);
                 }
             })
-            .catch((err) => console.error("Ошибка подключения SignalR:", err));
+            .catch(err);
 
         connection.current.on("ReceiveMessage", (user, message) => {
             if (onMessageReceived) {
@@ -28,7 +27,7 @@ export default function SignalRConnection({ onMessageReceived, onConnectionReady
         });
 
         return () => {
-            connection.current.stop().then(() => console.log("SignalR подключение закрыто"));
+            connection.current.stop();
         };
     }, [onMessageReceived, onConnectionReady]);
 

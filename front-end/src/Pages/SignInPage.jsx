@@ -36,37 +36,43 @@ const SignInPage = () => {
         setIsSubmitting(true);
         try {
             const hashedPassword = sha3_512(password);
-
+    
             const formData = new FormData();
             formData.append('username', username);
             formData.append('hash', hashedPassword);
             const host = window.location.hostname;
+    
             const response = await fetch(`https://${host}:7186/Auth/login`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
             });
-            localStorage.setItem('username', username);
-
+    
             if (response.status === 200) {
-                const response = await fetch(`https://${host}:7186/MainPage/getAvatar`, {
+                const userId = await response.text();
+                localStorage.setItem('username', username);
+                localStorage.setItem('userId', userId);
+    
+                const avatarResponse = await fetch(`https://${host}:7186/MainPage/getAvatar`, {
                     method: 'GET',
                     credentials: 'include'
                 });
-
-                if (response.status === 200) {
-                    const avatarText = await response.text();
+    
+                if (avatarResponse.status === 200) {
+                    const avatarText = await avatarResponse.text();
                     const avatarNumber = parseInt(avatarText, 10);
                     localStorage.setItem('avatarNumber', avatarNumber);
                 }
+    
                 const auth = await checkAuth(navigate);
                 if (auth) {
                     navigate('/main');
                 }
             } else {
-                // const errorText = await response.text();
+                console.error("Ошибка авторизации");
             }
         } catch (error) {
+            console.error("Ошибка в handleSubmit:", error);
         } finally {
             setIsSubmitting(false);
         }
