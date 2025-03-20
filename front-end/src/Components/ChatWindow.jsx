@@ -1,60 +1,81 @@
 import { useState, useEffect, useRef } from "react";
+import checkAuth from "./AuthCheck";
 
 export default function ChatWindow({ chat, onBack }) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const connectionRef = useRef(null);
     const currentUser = localStorage.getItem("username");
 
     useEffect(() => {
-        const host = window.location.hostname;
-        const loadMessages = async () => {
-            try {
-                const response = await fetch(`https://${host}:7186/MainPage/msgs?chatName=${chat.chatName}`, {
-                    credentials: 'include'
-                });
-                if (!response.ok) {
-                    throw new Error();
+        const initializeChat = async () => {
+            const isAuth = await checkAuth();
+            setIsAuthenticated(isAuth);
+
+            if (!isAuth) {
+                return;
+            }
+
+            const host = window.location.hostname;
+
+            const loadMessages = async () => {
+                try {
+                    const response = await fetch(`https://${host}:7186/MainPage/msgs?chatName=${chat.chatId}`, {
+                        credentials: 'include'
+                    });
+                    if (!response.ok) {
+                        throw new Error();
+                    }
+                    const data = await response.json();
+                    const sortedData = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    setMessages(sortedData);
+                } catch (error) {
+                    console.error("Ошибка загрузки сообщений:", error);
                 }
-                const data = await response.json();
-                const sortedData = data.sort((a, b) => new Date(a.date) - new Date(b.date));
-                console.log(sortedData);
-                setMessages(sortedData);
-            } catch (error) { }
+            };
+
+            await loadMessages();
+
+            const connectSignalR = async () => {
+                const signalR = await import("@microsoft/signalr");
+                connectionRef.current = new signalR.HubConnectionBuilder()
+                    .withUrl(`https://${host}:7215/myhub`)
+                    .configureLogging(signalR.LogLevel.None)
+                    .withAutomaticReconnect()
+                    .build();
+
+                try {
+                    await connectionRef.current.start();
+
+                    connectionRef.current.on("SendMessage", (user, text, chatName) => {
+                        setMessages((prevMessages) => [
+                            ...prevMessages,
+                            { user, message: text, chatName }
+                        ]);
+                    });
+                } catch (error) {
+                    console.error("Ошибка подключения SignalR:", error);
+                }
+            };
+
+            await connectSignalR();
         };
 
-        loadMessages();
-
-        const connectSignalR = async () => {
-            const signalR = await import("@microsoft/signalr");
-            connectionRef.current = new signalR.HubConnectionBuilder()
-                .withUrl(`https://${host}:7215/myhub`)
-                .withAutomaticReconnect()
-                .build();
-
-            try {
-                await connectionRef.current.start();
-
-                connectionRef.current.on("SendMessage", (user, text) => {
-                    setMessages((prevMessages) => [...prevMessages, { user, message: text }]);
-                });
-            } catch (error) { }
-        };
-
-        connectSignalR();
+        initializeChat();
 
         return () => {
             if (connectionRef.current) {
                 connectionRef.current.stop();
             }
         };
-    }, [chat.chatName]);
+    }, [chat.chatId]);
 
     const handleSendMessage = () => {
         if (message.trim() !== "" && connectionRef.current) {
             connectionRef.current
                 .invoke("SendMessage", chat.chatName, localStorage.getItem("id"), message)
-                .catch();
+                .catch((error) => console.error("Ошибка отправки сообщения:", error));
             setMessage("");
         }
     };
@@ -71,12 +92,21 @@ export default function ChatWindow({ chat, onBack }) {
                 throw new Error();
             }
         } catch (error) {
-        }
-        finally {
+            console.error("Ошибка при очистке сообщений:", error);
+        } finally {
             onBack();
         }
     };
 
+    if (!isAuthenticated) {
+        return (
+            <div className="chat-window d-flex flex-column bg-light shadow rounded-3">
+                <div className="d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
+                    <p className="text-danger">Аутентификация не выполнена. Пожалуйста, обновите страницу.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="chat-window d-flex flex-column bg-light shadow rounded-3" style={{ height: "80vh", margin: "0 auto" }}>
@@ -91,7 +121,6 @@ export default function ChatWindow({ chat, onBack }) {
                 {messages
                     .filter(msg => msg.chatName === chat.chatName)
                     .map((msg, index) => {
-                        console.log("msg.chatname: " + msg.chatName + ", chat.chatname: " + chat.chatName);
                         const isCurrentUser = msg.user === currentUser;
                         return (
                             <div
