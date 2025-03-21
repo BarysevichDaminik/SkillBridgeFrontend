@@ -21,7 +21,7 @@ export default function ChatWindow({ chat, onBack }) {
 
             const loadMessages = async () => {
                 try {
-                    const response = await fetch(`https://${host}:7186/MainPage/msgs?chatName=${chat.chatId}`, {
+                    const response = await fetch(`https://${host}:7186/MainPage/msgs?chatId=${chat.chatId}`, {
                         credentials: 'include'
                     });
                     if (!response.ok) {
@@ -40,7 +40,7 @@ export default function ChatWindow({ chat, onBack }) {
             const connectSignalR = async () => {
                 const signalR = await import("@microsoft/signalr");
                 connectionRef.current = new signalR.HubConnectionBuilder()
-                    .withUrl(`https://${host}:7215/myhub`)
+                    .withUrl(`https://${host}:7215/myhub?chatId=${chat.chatId}`)
                     .configureLogging(signalR.LogLevel.None)
                     .withAutomaticReconnect()
                     .build();
@@ -48,10 +48,10 @@ export default function ChatWindow({ chat, onBack }) {
                 try {
                     await connectionRef.current.start();
 
-                    connectionRef.current.on("SendMessage", (user, text, chatName) => {
+                    connectionRef.current.on("SendMessage", (user, text, chatName, chatId) => {
                         setMessages((prevMessages) => [
                             ...prevMessages,
-                            { user, message: text, chatName }
+                            { user, message: text, chatName, chatId }
                         ]);
                     });
                 } catch (error) {
@@ -72,9 +72,10 @@ export default function ChatWindow({ chat, onBack }) {
     }, [chat.chatId]);
 
     const handleSendMessage = () => {
+        console.log(chat.chatId + " | " + message);
         if (message.trim() !== "" && connectionRef.current) {
             connectionRef.current
-                .invoke("SendMessage", chat.chatName, localStorage.getItem("id"), message)
+                .invoke("SendMessage", chat.chatId, localStorage.getItem("id"), message)
                 .catch((error) => console.error("Ошибка отправки сообщения:", error));
             setMessage("");
         }
@@ -84,7 +85,7 @@ export default function ChatWindow({ chat, onBack }) {
         const host = window.location.hostname;
 
         try {
-            const response = await fetch(`https://${host}:7215/ChatHub/clearMsgs?chatName=${chat.chatName}`, {
+            const response = await fetch(`https://${host}:7215/ChatHub/clearMsgs?chatId=${chat.chatId}`, {
                 method: 'DELETE'
             });
 
@@ -102,7 +103,7 @@ export default function ChatWindow({ chat, onBack }) {
         return (
             <div className="chat-window d-flex flex-column bg-light shadow rounded-3">
                 <div className="d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
-                    <p className="text-danger">Аутентификация не выполнена. Пожалуйста, обновите страницу.</p>
+                    <p className="text-danger coats-font">Аутентификация не выполнена. Пожалуйста, обновите страницу.</p>
                 </div>
             </div>
         );
@@ -119,7 +120,7 @@ export default function ChatWindow({ chat, onBack }) {
 
             <div className="flex-grow-1 p-4 overflow-auto" style={{ maxHeight: "60vh" }}>
                 {messages
-                    .filter(msg => msg.chatName === chat.chatName)
+                    .filter(msg => msg.chatId === chat.chatId)
                     .map((msg, index) => {
                         const isCurrentUser = msg.user === currentUser;
                         return (
