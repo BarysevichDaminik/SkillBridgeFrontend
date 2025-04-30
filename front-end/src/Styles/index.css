@@ -27,11 +27,28 @@
     color: rgba(46,46,46, 0.5);
 }
 
-
 .main-page-bgc{
     background-color: #ffffea;
 }
 
 .avatar-size {
     max-width: 80px;
+}
+
+.nav-item {
+    transition: shadow 0.2s ease-in-out;
+}
+
+.nav-item:hover {
+    box-shadow: 0px 3px 25px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item1 {
+    transition: background-color 0.2s ease-in-out, shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-item1:hover {
+    box-shadow: 0px 3px 25px rgba(0, 0, 0, 0.2);
+    background-color: #2e2e2e !important;
+    color: white;
 }
